@@ -4,9 +4,25 @@
         <servlet-name>Hello</servlet-name>
         <servlet-class>com.skoleni.jeeequa.web.servlet.Hello</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DirTree</servlet-name>
+        <servlet-class>com.skoleni.jeeequa.utils.dirtree.DirTree</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FileSend</servlet-name>
+        <servlet-class>com.skoleni.jeeequa.utils.filesend.FileSend</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Hello</servlet-name>
         <url-pattern>/Hello</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DirTree</servlet-name>
+        <url-pattern>/DirTree</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FileSend</servlet-name>
+        <url-pattern>/FileSend</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

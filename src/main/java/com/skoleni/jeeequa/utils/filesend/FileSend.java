@@ -2,12 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.skoleni.jeeequa.web.servlet;
+package com.skoleni.jeeequa.utils.filesend;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import org.apache.commons.lang.*;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author User
  */
-public class Hello extends HttpServlet {
+public class FileSend extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -32,45 +34,34 @@ public class Hello extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        try {
-            if (request.getParameter("name") == null || request.getParameter("name").equals("null")
-                    || request.getParameter("name").equals("")) {
-                noName(out,request);
-                
-            } else {
-                out.println("<!DOCTYPE html>");
-                out.println("<html>");
-                out.println("<head>");
-                out.println("<title>Servlet Hello</title>");
-                out.println("</head>");
-                out.println("<body>");
-                out.println("<h1>Hello " + StringEscapeUtils.escapeHtml(request.getParameter("name")) + "</h1> from "
-                        + StringEscapeUtils.escapeHtml(request.getContextPath()) + "");
-                out.println("</body>");
-                out.println("</html>");
-            }
-        } catch (Exception e) {
-            out.println(e.getMessage());
-            
-        } finally {
-            out.close();
+        String path = request.getParameter("file");
+        if (path == null || path.equals("")) {
+            response.sendError(400, "No file parameter sent to server.");
         }
-    }
+        try {
+            File dir = new File(path);
+            response.setContentType("application/zip");
+            File toSend = new File(dir.getPath());
+            response.setContentLength((int) toSend.length());
+            response.setHeader("Content-Disposition", "attachment;filename=\"" + path + "\"");
+            try {
+                File f = new File(path);
+                byte[] arBytes = new byte[(int) f.length()];
+                FileInputStream is = new FileInputStream(f);
+                is.read(arBytes);
+                ServletOutputStream op = response.getOutputStream();
+                op.write(arBytes);
+                op.flush();
 
-    private void noName(PrintWriter out, HttpServletRequest request) {
-        out.println("<!DOCTYPE html>");
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Servlet Hello</title>");
-        out.println("</head>");
-        out.println("<body>");
-        out.println("<h1>Nevypplneno jmeno</h1>" + StringEscapeUtils.escapeHtml(request.getContextPath()) + "");
-        out.println("</br><a href=\"/JEE_Equa\">zpet</a>");
-        out.println("</body>");
-        out.println("</html>");
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+
+        } catch (Exception e) {
+        }
+        
+        //response.sendRedirect(path);
     }
-    
-    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -101,8 +92,6 @@ public class Hello extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-
-
     }
 
     /**
