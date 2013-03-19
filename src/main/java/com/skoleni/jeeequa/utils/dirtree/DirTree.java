@@ -122,8 +122,6 @@ public class DirTree extends HttpServlet {
         String link;
 
         if (dir.isDirectory()) {
-            String path;
-
             link = "Dir : <a href=\"DirTree?path=" + URLEncoder.encode(dir.getPath(), "UTF-8") + "\">" + StringEscapeUtils.escapeHtml(dir.getName()) + "</a>";
         } else {
             link = "File : <a href=\"./FileSend?file=" + URLEncoder.encode(dir.getPath(), "UTF-8") + "\">" + StringEscapeUtils.escapeHtml(dir.getName()) + "</a>";
